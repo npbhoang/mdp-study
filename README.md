@@ -1,6 +1,6 @@
 # Models Trump Code: An Empirical Analysis of Enforcing GDPR Compliance
 
-***Authors: Anonymous Author(s) ***
+***Authors: Anonymous Author(s)***
 
 Artifacts developer(s): Anonymous
 
@@ -20,7 +20,7 @@ Nevertheless, interested readers are welcome to use the provided artifacts for t
     - `assignments` contains an exercise assignment for 𝜈ActionGUI. In this assignment, students are tasked with implementing security policies for a simple Thoughts application using the 𝜈ActionGUI tool. A description of the application can be found in the `assignment.pdf`, and the base implementation (i.e., implementation without security policies defined and enforced) is located in the `messageBoardInit` sub-directory.
   - `Flask\labs` includes three tutorials for Flask: `tutorial1`, `tutorial2`, and `tutorial3`, along the docker setup for running Python/Flask application in `installation` sub-directory.
 * `course_project` contains artifacts related to (ii).
-  - `project_description` contains files that describe the project and the its evolution in natural language.
+  - `project_description` contains files that describe the project and its evolution in natural language.
   - `project_templates` contains the 𝜈ActionGUI and Flask implementation templates.
     - `TemplateFlask` contains the code template for Flask in the Development phases.
     - `TemplateNAG` contains the code template for 𝜈ActionGUI in the Development phases.
