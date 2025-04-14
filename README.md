@@ -9,16 +9,13 @@ This includes:
 - (i) Exercise and lab assignments designed to introduce students to 𝜈ActionGUI tool and Python/Flask framework.
 - (ii) Descriptions and templates of the Event Platform project written in 𝜈ActionGUI tool and Python/Flask framework.
 
-Due to ethical concerns, personal data related to the study will not be disclosed.
-Nevertheless, interested readers are welcome to use the provided artifacts for their own research.
-
 ## Repository Structure
 
 * `course_materials` contains artifacts related to (i).
   - `NuActionGUI` contains two key artifacts for 𝜈ActionGUI:
-    - `labs` provides a tutorial and installation guide for the 𝜈ActionGUI tool. The tutorial is in the `tutorial` sub-directory and a Docker setup for running the 𝜈ActionGUI tool is in the `NuActionGUI.zip` archive.
-    - `assignments` contains an exercise assignment for 𝜈ActionGUI. In this assignment, students are tasked with implementing security policies for a simple Thoughts application using the 𝜈ActionGUI tool. A description of the application can be found in the `assignment.pdf`, and the base implementation (i.e., implementation without security policies defined and enforced) is located in the `messageBoardInit` sub-directory.
-  - `Flask\labs` includes three tutorials for Flask: `tutorial1`, `tutorial2`, and `tutorial3`, along the docker setup for running Python/Flask application in `installation` sub-directory.
+    - `tutorials` provides a tutorial and installation guide for the 𝜈ActionGUI tool. 
+    - `assignments` contains exercise assignments for 𝜈ActionGUI.   
+  - `Flask\labs` includes three tutorials for Flask: `lab1`, `lab2`, and `lab3`; along the docker setup for running Python/Flask application in `installation` sub-directory.
 * `course_project` contains artifacts related to (ii).
   - `project_description` contains files that describe the project and its evolution in natural language.
   - `project_templates` contains the 𝜈ActionGUI and Flask implementation templates.
