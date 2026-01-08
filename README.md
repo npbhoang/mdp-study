@@ -1,4 +1,4 @@
-# Models Trump Code: An Empirical Analysis of Enforcing GDPR Compliance
+# Models Trump Code: An Empirical Analysis of GDPR Enforcement
 
 ***Authors: Anonymous Author(s)***
 
