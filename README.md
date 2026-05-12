@@ -1,4 +1,4 @@
-# Models Trump Code: An Empirical Analysis of GDPR Enforcement
+# Models Trump Code: An Empirical Analysis of GDPR Compliance
 
 ***Authors: Anonymous Author(s)***
 
@@ -23,7 +23,7 @@ This includes:
     - `TemplateNAG` contains the code template for 𝜈ActionGUI in the Development phases.
     - `TemplateUpdates` contains the code template updates for Flask and 𝜈ActionGUI in the Evolution phase.
 
-Instructions for compiling and running the application can be found in the `README.md` of the corresponding folders.
+Instructions for compiling and running the application templates can be found in the `README.md` of the corresponding folders.
 
 ## Installation and Usage
 
