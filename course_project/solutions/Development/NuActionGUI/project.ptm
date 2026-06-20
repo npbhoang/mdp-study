@@ -1,0 +1,58 @@
+Personal data {
+    Person.name,
+    Person.surname,
+    Person.role,
+    Person.subscriptions,
+    Person.gender,
+    Person.email
+}
+
+Purposes {
+    ANY includes MARKETING ANALYTICS FUNCTIONAL,
+    MARKETING includes TARGETEDMARKETING MASSMARKETING,
+    FUNCTIONAL includes RECOMMENDEVENTS CORE,
+    ANALYTICS,
+    TARGETEDMARKETING,
+    MASSMARKETING,
+    RECOMMENDEVENTS,
+    CORE
+}
+
+Actual purposes {
+    main CORE,
+    Person.users CORE,
+    Person.user CORE,
+    Person.profile CORE,
+    Person.update_user CORE,
+    Event.events CORE,
+    Event.view_event CORE,
+    Event.manage_event CORE,
+    Category.view_category CORE,
+    Category.edit_category CORE,
+    Category.get_candidates CORE,
+
+    Person.recommend_events RECOMMENDEVENTS,
+    Person.subscribe CORE,
+    Person.unsubscribe CORE,
+
+    Person.send_advertisement_to_user MASSMARKETING,
+    Category.send_mass_advertisement MASSMARKETING,
+    Ad.get_personalize_ad MARKETING,
+    Ad.get_personalize_ad TARGETEDMARKETING,
+
+    Event.analyze ANALYTICS
+}
+
+Declared purposes {
+    Person.name MARKETING,
+    Person.name CORE,
+    Person.surname CORE,
+    Person.role CORE,
+    Person.subscriptions CORE,
+    Person.gender CORE,
+    Person.email CORE,
+    Person.subscriptions [self.role = Role.REGULARUSER] <only_if_regular_user> RECOMMENDEVENTS,
+    Person.gender TARGETEDMARKETING,
+    Person.email MASSMARKETING,
+    Person.gender ANALYTICS
+}

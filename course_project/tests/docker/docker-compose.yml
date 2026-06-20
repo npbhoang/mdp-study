@@ -1,0 +1,18 @@
+# Convenience wrapper around the dockerized test harness.
+#
+#   cd course_project/tests/docker
+#   docker compose build
+#   docker compose run --rm tests --phase dev --tech nag --solution
+#
+# Anything after the service name is passed straight to test_driver.py.
+services:
+  tests:
+    build:
+      # Context is course_project/ so the image can see tests/, solutions/,
+      # and templates/ (all referenced by test_driver.py).
+      context: ../..
+      dockerfile: tests/docker/Dockerfile
+    image: nag-tests
+    container_name: nag-tests
+    # tty gives the live pytest progress bar a terminal to render into.
+    tty: true

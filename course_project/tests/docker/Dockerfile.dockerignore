@@ -1,0 +1,10 @@
+# Keep runtime cruft out of the build context (context root = course_project/).
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.mypy_cache/
+**/instance/
+**/*.db
+**/*.bak
+.git/
+tests/last_failures.txt

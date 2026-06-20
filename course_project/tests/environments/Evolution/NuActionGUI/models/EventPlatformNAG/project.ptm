@@ -1,0 +1,75 @@
+Personal data {
+    Person.name,
+    Person.surname,
+    Person.role,
+    Person.gender,
+    Person.email,
+    Person.subscriptions,
+    Person.attends
+}
+
+Purposes {
+    ANY includes MARKETING INSIGHTS FUNCTIONAL,
+    MARKETING includes TARGETEDMARKETING MASSMARKETING,
+    TARGETEDMARKETING,
+    MASSMARKETING,
+    INSIGHTS includes ANALYTICS STATS,
+    ANALYTICS,
+    STATS,
+    FUNCTIONAL includes RECOMMENDEVENTS CORE,
+    RECOMMENDEVENTS,
+    CORE
+}
+
+Actual purposes {
+    main CORE,
+    Person.users CORE,
+    Person.user CORE,
+    Person.profile CORE,
+    Person.update_user CORE,
+    Event.events CORE,
+    Event.view_event CORE,
+    Event.manage_event CORE,
+    Category.view_category CORE,
+    Category.edit_category CORE,
+    Category.get_candidates CORE,
+
+    Person.recommend_events RECOMMENDEVENTS,
+    Person.subscribe CORE,
+    Person.unsubscribe CORE,    
+    Person.join CORE,
+    Person.leave CORE,
+    Event.remove_attendee CORE,
+    Event.accept_request CORE,
+    Event.reject_request CORE,
+    Event.promote_manager CORE,
+    Event.demote_manager CORE,
+    Person.send_advertisement_to_user MASSMARKETING,
+
+    Event.analyze ANALYTICS,
+    Ad.get_personalize_ad TARGETEDMARKETING,
+    Category.send_mass_advertisement MASSMARKETING,
+  
+    Person.personalized_stats STATS,
+    Invite.send_invite CORE,
+    Invite.accept_invitation CORE,
+    Invite.decline_invitation CORE
+}
+
+Declared purposes {
+    Person.name MARKETING,
+    Person.name CORE,
+    Person.surname CORE,
+    Person.role CORE,
+    Person.gender CORE,
+    Person.email CORE,
+    Person.subscriptions CORE,
+    Person.subscriptions [self.role = Role.REGULARUSER] <you are a regular user> RECOMMENDEVENTS,
+    Person.gender TARGETEDMARKETING,
+    Person.email MASSMARKETING,
+    Person.gender ANALYTICS,
+    Person.attends FUNCTIONAL,
+    Person.name [self.attends->size()>2] <you attended more than two events> STATS,
+    Person.subscriptions [self.attends->size()>2] <you attended more than two events> STATS,
+    Person.attends [self.attends->size()>2] <you attended more than two events> STATS
+}
