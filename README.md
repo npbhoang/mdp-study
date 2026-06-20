@@ -2,7 +2,9 @@
 
 ***Authors: Hoang Nguyen, Srdan Krstic, and David Basin***
 
-Artifacts developers: Hoang Nguyen and Srdan Krstic
+Artifacts developers: 
+- Hoang Nguyen (hoang.nguyen@inf.ethz.ch) 
+- Srdan Krstic (srdan.krstic@inf.ethz.ch)
 
 > **Evaluation.** This artifact is submitted for the **Artifacts Available** and **Artifacts Evaluated (Reusable)** badge.
 
