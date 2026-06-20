@@ -69,8 +69,6 @@ class PrivacyException(Exception):
         self.params = params
 
 def _purposes_below(name, tree=PRIVACY_INPUT):
-    """The purpose `name` plus every purpose nested under it, per the PRIVACY_INPUT
-    hierarchy. Consent to a purpose also grants the purposes it contains."""
     for purpose, body in tree.items():
         if purpose == name:
             names = {purpose}
@@ -83,12 +81,9 @@ def _purposes_below(name, tree=PRIVACY_INPUT):
         found = _purposes_below(name, body["children"])
         if found:
             return found
-    return set()  # not found in this subtree
+    return set()  
 
 def get_consent_tuples(consents):
-    # Per the privacy policy, consenting to a purpose also covers the actual purposes
-    # it contains ("...or to purposes containing the actual purposes"). So expand each
-    # consent down the hierarchy: e.g. consent to Functional grants Core/RecommendEvents.
     tuples = []
     for con in consents:
         below = _purposes_below(con.purpose.name) or {con.purpose.name}
@@ -411,7 +406,6 @@ def user(id):
         user.subscriptions = RESTRICTED
     else:
         consent_tuples = get_consent_tuples(Person.query.get(user.id).consents)
-        # security check
         if current_user.id != id:
             if current_user.role.name != "ADMIN":
                 user.gender = RESTRICTED
@@ -420,7 +414,6 @@ def user(id):
             if current_user.id not in [moderator.id for moderator_list in sub_moderators for moderator in moderator_list]:
                 user.email = RESTRICTED
             user.subscriptions = RESTRICTED
-        # privacy check
         if ('Person', 'name', 'Core') not in consent_tuples:
             user.name = RESTRICTED
         if ('Person', 'surname', 'Core') not in consent_tuples:
@@ -440,8 +433,6 @@ def update_user():
     if not current_user.is_authenticated:
         raise SecurityException(msg="Only registered users can update their data")
     user = Person.query.get(request.form["id"])
-    # Writing personal data requires the data owner's consent for the Core purpose
-    # (update_user runs under the Core actual purpose).
     owner_consents = get_consent_tuples(user.consents)
     if user.name != request.form["name"]:
         if current_user.id != user.id:
