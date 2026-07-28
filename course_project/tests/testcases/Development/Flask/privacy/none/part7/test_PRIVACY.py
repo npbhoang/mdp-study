@@ -30,28 +30,6 @@ def login_user(user, app_with_data):
     login_user(user)
     identity_changed.send(app_with_data, identity=Identity(current_user.id))
 
-# Test Case 260: Read a Category’s moderators’s name as the non-moderator of the category
-# on endpoint edit_category() 
-# Should fail
-def test_case_260_edit_category(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'MODERATOR0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test edit_category()
-        try:
-            from project import edit_category
-            result = edit_category(14) 
-            assert result is not None
-            testing_category = result['category']
-            assert testing_category is not None
-            assert testing_category.moderators is not RESTRICTED
-            assert len(testing_category.moderators) == 1
-            assert testing_category.moderators[0].name is RESTRICTED
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
 # Test Case 262: Read a Category’s moderators’s surname as the non-moderator of the category
 # on endpoint edit_category() 
 # Should fail
@@ -63,50 +41,6 @@ def test_case_262_edit_category(client, app_with_data):
         try:
             from project import edit_category
             result = edit_category(14) 
-            assert result is not None
-            testing_category = result['category']
-            assert testing_category is not None
-            assert testing_category.moderators is not RESTRICTED
-            assert len(testing_category.moderators) == 1
-            assert testing_category.moderators[0].surname is RESTRICTED
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 259: Read a Category’s moderators’s name as the moderator of the category
-# on endpoint edit_category() 
-# Should fail
-def test_case_259_edit_category(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'MODERATOR0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test edit_category()
-        try:
-            from project import edit_category
-            result = edit_category(13)
-            assert result is not None
-            testing_category = result['category']
-            assert testing_category is not None
-            assert testing_category.moderators is not RESTRICTED
-            assert len(testing_category.moderators) == 1
-            assert testing_category.moderators[0].name is RESTRICTED
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 261: Read a Category’s moderators’s surname as the moderator of the category
-# on endpoint edit_category() 
-# Should fail
-def test_case_261_edit_category(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'MODERATOR0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test edit_category()
-        try:
-            from project import edit_category
-            result = edit_category(13)
             assert result is not None
             testing_category = result['category']
             assert testing_category is not None
@@ -137,42 +71,6 @@ def test_case_265_edit_category(client, app_with_data):
         finally:
             db.session.rollback()
 
-# Test Case 273: Send mass ads as a moderator of the category
-# on endpoint send_mass_advertisement() 
-# Should fail
-def test_case_273_send_mass_advertisement(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'MODERATOR0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test send_mass_advertisement()
-        try:
-            from project import send_mass_advertisement
-            send_mass_advertisement(13)  
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 275: Analyze an event as an owner
-# on endpoint analyze() 
-# Should fail
-def test_case_275_analyze(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test analyze()
-        try:
-            from project import analyze
-            result = analyze(8)  
-            assert result['male'] is RESTRICTED or result['male'] == 0
-            assert result['female'] is RESTRICTED or result['female'] == 0
-            db.session.rollback()
-        except PrivacyException:
-            db.session.rollback()
-            assert True
-        finally:
-            db.session.rollback()
-
 # Test Case 276: Analyze an event as a manager
 # on endpoint analyze() 
 # Should fail
@@ -193,62 +91,3 @@ def test_case_276_analyze(client, app_with_data):
         finally:
             db.session.rollback()
 
-# Test Case 277: Analyze an event as an attendant
-# on endpoint analyze() 
-# Should fail
-def test_case_277_analyze(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test analyze()
-        try:
-            from project import analyze
-            result = analyze(10)  
-            assert result['male'] is RESTRICTED or result['male'] == 0
-            assert result['female'] is RESTRICTED or result['female'] == 0
-            db.session.rollback()
-        except PrivacyException:
-            db.session.rollback()
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 278: Analyze an event as a requester
-# on endpoint analyze() 
-# Should fail
-def test_case_278_analyze(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test analyze()
-        try:
-            from project import analyze
-            result = analyze(11)  
-            assert result['male'] is RESTRICTED or result['male'] == 0
-            assert result['female'] is RESTRICTED or result['female'] == 0
-            db.session.rollback()
-        except PrivacyException:
-            db.session.rollback()
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 279: Analyze an event as someone else
-# on endpoint analyze() 
-# Should fail
-def test_case_279_analyze(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test analyze()
-        try:
-            from project import analyze
-            result = analyze(12)  
-            assert result['male'] is RESTRICTED or result['male'] == 0
-            assert result['female'] is RESTRICTED or result['female'] == 0
-            db.session.rollback()
-        except PrivacyException:
-            db.session.rollback()
-            assert True
-        finally:
-            db.session.rollback()

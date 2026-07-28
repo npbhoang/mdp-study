@@ -76,54 +76,6 @@ def test_case_11_accept_invitation(client, app_with_data):
             assert caller.id in [p.id for p in Event.query.get(9).attendants]
             db.session.rollback()
 
-# Test Case 18: Read own attended events, more than 2 attend events
-# on endpoint personalized_stats()
-# Should pass
-def test_case_18_personalized_stats(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(caller,StatsPurpose,"Person","attends")
-        except Exception:
-            assert False
-        # Test personalized_stats()
-        try:
-            from project import personalized_stats
-            result = personalized_stats(caller.id)
-            testing_user = result["user"]
-            assert testing_user is not None
-            assert testing_user.attends is not RESTRICTED
-            assert len(testing_user.attends) == 4
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 20: Read own subscriptions, more than 2 attend events
-# on endpoint personalized_stats()
-# Should pass
-def test_case_20_personalized_stats(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(caller,StatsPurpose,"Person","subscriptions")
-        except Exception:
-            assert False
-        # Test personalized_stats()
-        try:
-            from project import personalized_stats
-            result = personalized_stats(caller.id)
-            testing_user = result["user"]
-            assert testing_user is not None
-            assert testing_user.subscriptions is not RESTRICTED
-            assert len(testing_user.subscriptions) == 1
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
 # Test Case 18b: Read own attended events, less or equal to 2 attend events
 # on endpoint personalized_stats()
 # Should pass

@@ -38,50 +38,6 @@ def add_consent(user, purpose, resource, subresource):
 
 # This test suite is dedicated for PRIVACY tests
 
-# Test Case 11: Accept a received invitation
-# on endpoint accept_invitation()
-# Should fail
-def test_case_11_accept_invitation(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:        
-            add_consent(caller, CORE, 'Person', 'attends')
-        except Exception:
-            assert False
-        # Test accept_invitation()
-        try:
-            from project import accept_invitation
-            accept_invitation(12)  
-        except PrivacyException:
-            assert False
-        finally:
-            assert Invite.query.filter(Invite.id == 12).count() == 0
-            assert caller.id in [p.id for p in Event.query.get(9).attendants]
-            db.session.rollback()
-
-# Test Case 18: Read own attended events, more than 2 attended events
-# on endpoint personalized_stats()
-# Should fail
-def test_case_18_personalized_stats(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:        
-            add_consent(caller, STATS, 'Person', 'attends')
-        except Exception:
-            assert False
-        # Test personalized_stats()
-        try:
-            from project import personalized_stats
-            result = personalized_stats(caller.id)
-            assert result['attended_events'] is not RESTRICTED
-            assert len(result['attended_events']) == 4
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
 # Test Case 20: Read own subscriptions, more than 2 attended events
 # on endpoint personalized_stats()
 # Should fail

@@ -54,27 +54,6 @@ def login_user(user, app_with_data):
     login_user(user)
     identity_changed.send(app_with_data, identity=Identity(current_user.id))
 
-# Test Case 73: Remove oneself from attending an Event that one attends
-# Endpoint: leave()
-# Admin: Fail
-def test_case_73_leave(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(caller,CorePurpose,"Person","attends")
-        except Exception:
-            assert False
-        # Test leave()
-        try:
-            from project import leave
-            leave(12)
-            assert caller.id not in [person.id for person in Event.query.get(12).attendants]
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
 # Test Case 94: Read an Event’s owner’s name field that one owns
 # Endpoint: events()
 # Admin: Fail
@@ -164,62 +143,3 @@ def test_case_96_events(client, app_with_data):
         finally:
             db.session.rollback()
 
-# Test Case 97: Read an Event’s owner’s name field that one requests
-# Endpoint: events()
-# Admin: Fail
-def test_case_97_events(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner = Person.query.filter(Person.testid == 'p1').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner,CorePurpose,"Person","name")
-        except Exception:
-            assert False
-        # Test events()
-        try:
-            result = events()
-            testing_events = result['events']
-            assert testing_events is not RESTRICTED
-            testing_event = None
-            for event in testing_events:
-                if event.testid == 'e10':
-                    testing_event = event
-                    break
-            assert testing_event is not None
-            assert testing_event.owner is not RESTRICTED
-            assert testing_event.owner.name == 'p1'
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 98: Read an Event’s owner’s name field that one does not own, manage, attend, or request
-# Endpoint: events()
-# Admin: Fail
-def test_case_98_events(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner = Person.query.filter(Person.testid == 'p1').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner,CorePurpose,"Person","name")
-        except Exception:
-            assert False
-        # Test events()
-        try:
-            result = events()
-            testing_events = result['events']
-            assert testing_events is not RESTRICTED
-            testing_event = None
-            for event in testing_events:
-                if event.testid == 'e11':
-                    testing_event = event
-                    break
-            assert testing_event is not None
-            assert testing_event.owner is not RESTRICTED
-            assert testing_event.owner.name == 'p1'
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()

@@ -23,23 +23,6 @@ RESTRICTED = Restrict()
 
 # This test suite is dedicated for PRIVACY tests
 
-# Test Case 231: Remove oneself from attending an Event that one attends
-# on endpoint remove_attendee() 
-# Should fail
-def test_case_231_remove_attendee(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test remove_attendee()
-        try:
-            from project import remove_attendee
-            remove_attendee(caller.id,12)
-        except PrivacyException:
-            assert True
-        finally:
-            assert caller.id in [attendee.id for attendee in Event.query.get(12).attendants]
-            db.session.rollback()
-
 # Test Case 234: Remove other attendants from an Event that one owns
 # on endpoint remove_attendee() 
 # Should fail
@@ -92,20 +75,3 @@ def test_case_241_accept_request(client, app_with_data):
             assert 7 not in [attendee.id for attendee in Event.query.get(10).attendants]
             db.session.rollback()
 
-# Test Case 242: Accept an attendance request for an Event as a manager
-# on endpoint accept_request() 
-# Should fail
-def test_case_242_accept_request(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test accept_request()
-        try:
-            from project import accept_request
-            result = accept_request(7,11)
-        except PrivacyException:
-            assert True
-        finally:
-            assert 7 in [requestor.id for requestor in Event.query.get(11).requesters]
-            assert 7 not in [attendee.id for attendee in Event.query.get(11).attendants]
-            db.session.rollback()

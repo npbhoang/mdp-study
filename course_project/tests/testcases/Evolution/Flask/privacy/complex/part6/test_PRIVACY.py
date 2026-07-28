@@ -55,49 +55,6 @@ def login_user(user, app_with_data):
     login_user(user)
     identity_changed.send(app_with_data, identity=Identity(current_user.id))
 
-# Test Case 231: Remove oneself from attending an Event that one attends
-# on endpoint remove_attendee() 
-# Should pass
-def test_case_231_FUNCTIONAL_remove_attendee(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(caller,FunctionalPurpose, "Person","attends")
-        except Exception:
-            assert False
-        # Test remove_attendee()
-        try:
-            from project import remove_attendee
-            remove_attendee(caller.id,12)
-            assert caller.id not in [attendee.id for attendee in Event.query.get(12).attendants]
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 234: Remove other attendants from an Event that one owns
-# on endpoint remove_attendee() 
-# Should pass
-def test_case_234_FUNCTIONAL_remove_attendee(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner = Person.query.get(5)
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner,FunctionalPurpose, "Person","attends")
-        except Exception:
-            assert False
-        # Test remove_attendee()
-        try:
-            from project import remove_attendee
-            remove_attendee(5,10)
-            assert 5 not in [attendee.id for attendee in Event.query.get(10).attendants]
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
 # Test Case 235: Remove other attendants from an Event that one manages
 # on endpoint remove_attendee() 
 # Should pass
@@ -120,73 +77,6 @@ def test_case_235_FUNCTIONAL_remove_attendee(client, app_with_data):
         finally:
             db.session.rollback()
 
-# Test Case 241: Accept an attendance request for an Event as an owner
-# on endpoint accept_request() 
-# Should pass
-def test_case_241_FUNCTIONAL_accept_request(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner = Person.query.get(7)
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner,FunctionalPurpose, "Person","attends")
-        except Exception:
-            assert False
-        # Test accept_request()
-        try:
-            from project import accept_request
-            result = accept_request(7,10)
-            assert 7 not in [requestor.id for requestor in Event.query.get(10).requesters]
-            assert 7 in [attendee.id for attendee in Event.query.get(10).attendants]
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 242: Accept an attendance request for an Event as a manager
-# on endpoint accept_request() 
-# Should pass
-def test_case_242_FUNCTIONAL_accept_request(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner = Person.query.get(7)
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner,FunctionalPurpose, "Person","attends")
-        except Exception:
-            assert False
-        # Test accept_request()
-        try:
-            from project import accept_request
-            result = accept_request(7,11)
-            assert 7 not in [requestor.id for requestor in Event.query.get(11).requesters]
-            assert 7 in [attendee.id for attendee in Event.query.get(11).attendants]
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 231: Remove oneself from attending an Event that one attends
-# on endpoint remove_attendee() 
-# Should pass
-def test_case_231_ANY_remove_attendee(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(caller,AnyPurpose,"Person","attends")
-        except Exception:
-            assert False
-        # Test remove_attendee()
-        try:
-            from project import remove_attendee
-            remove_attendee(caller.id,12)
-            assert caller.id not in [attendee.id for attendee in Event.query.get(12).attendants]
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
 # Test Case 234: Remove other attendants from an Event that one owns
 # on endpoint remove_attendee() 
 # Should pass
@@ -204,51 +94,6 @@ def test_case_234_ANY_remove_attendee(client, app_with_data):
             from project import remove_attendee
             remove_attendee(5,10)
             assert 5 not in [attendee.id for attendee in Event.query.get(10).attendants]
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 235: Remove other attendants from an Event that one manages
-# on endpoint remove_attendee() 
-# Should pass
-def test_case_235_ANY_remove_attendee(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner = Person.query.get(5)
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner,AnyPurpose,"Person","attends")
-        except Exception:
-            assert False
-        # Test remove_attendee()
-        try:
-            from project import remove_attendee
-            remove_attendee(5,11)
-            assert 5 not in [attendee.id for attendee in Event.query.get(11).attendants]
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 241: Accept an attendance request for an Event as an owner
-# on endpoint accept_request() 
-# Should pass
-def test_case_241_ANY_accept_request(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner = Person.query.get(7)
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner,AnyPurpose,"Person","attends")
-        except Exception:
-            assert False
-        # Test accept_request()
-        try:
-            from project import accept_request
-            result = accept_request(7,10)
-            assert 7 not in [requestor.id for requestor in Event.query.get(10).requesters]
-            assert 7 in [attendee.id for attendee in Event.query.get(10).attendants]
         except PrivacyException:
             assert False
         finally:

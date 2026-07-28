@@ -23,44 +23,6 @@ RESTRICTED = Restrict()
 
 # This test suite is dedicated for PRIVACY tests
 
-# Test Case 125: Read an Event’s attendants’ name field that one owns
-# on endpoint view_event() 
-# Should fail
-def test_case_125_view_event(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test view_event()
-        try:
-            from project import view_event
-            result = view_event(15)
-            assert len(result['event_attendant_names']) == 0 or result['event_attendant_names'][0] == RESTRICTED
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 126: Read an Event’s attendants’ name field that one manages
-# on endpoint view_event() 
-# Should fail
-def test_case_126_view_event(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test view_event()
-        try:
-            from project import view_event
-            result = view_event(9)
-            assert len(result['event_attendant_names']) == 0 or (
-                result['event_attendant_names'][0] == RESTRICTED and
-                result['event_attendant_names'][1] == RESTRICTED and
-                result['event_attendant_names'][2] == RESTRICTED and
-                result['event_attendant_names'][3] == RESTRICTED)
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
 # Test Case 127: Read an Event’s attendants’ name field that one attends
 # on endpoint view_event() 
 # Should fail
@@ -77,78 +39,6 @@ def test_case_127_view_event(client, app_with_data):
                 result['event_attendant_names'][1] == RESTRICTED and
                 result['event_attendant_names'][2] == RESTRICTED and
                 result['event_attendant_names'][3] == RESTRICTED)
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 128: Read an Event’s attendants’ name field that one requests
-# on endpoint view_event() 
-# Should fail
-def test_case_128_view_event(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test view_event()
-        try:
-            from project import view_event
-            result = view_event(16)
-            assert len(result['event_attendant_names']) == 0 or result['event_attendant_names'][0] == RESTRICTED
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 129: Read an Event’s attendants’ name field that one does not own, manage, attend, or request
-# on endpoint view_event() 
-# Should fail
-def test_case_129_view_event(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test view_event()
-        try:
-            from project import view_event
-            result = view_event(17)
-            assert len(result['event_attendant_names']) == 0 or result['event_attendant_names'][0] == RESTRICTED
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 130: Read an Event’s attendants’ surname field that one owns
-# on endpoint view_event() 
-# Should fail
-def test_case_130_view_event(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test view_event()
-        try:
-            from project import view_event
-            result = view_event(15)
-            assert len(result['event_attendant_surames']) == 0 or result['event_attendant_surames'][0] == RESTRICTED
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 131: Read an Event’s attendants’ surname field that one manages
-# on endpoint view_event() 
-# Should fail
-def test_case_131_view_event(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test view_event()
-        try:
-            from project import view_event
-            result = view_event(9)
-            assert len(result['event_attendant_surames']) == 0 or (
-                result['event_attendant_surames'][0] == RESTRICTED and
-                result['event_attendant_surames'][1] == RESTRICTED and
-                result['event_attendant_surames'][2] == RESTRICTED and
-                result['event_attendant_surames'][3] == RESTRICTED)
         except PrivacyException:
             assert True
         finally:
@@ -192,19 +82,3 @@ def test_case_133_view_event(client, app_with_data):
         finally:
             db.session.rollback()
 
-# Test Case 134: Read an Event’s attendants’ surname field that one does not own, manage, attend, or request
-# on endpoint view_event() 
-# Should fail
-def test_case_134_view_event(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test view_event()
-        try:
-            from project import view_event
-            result = view_event(17)
-            assert len(result['event_attendant_surames']) == 0 or result['event_attendant_surames'][0] == RESTRICTED
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()

@@ -38,48 +38,6 @@ def add_consent(user, purpose, resource, subresource):
 
 # This test suite is dedicated for PRIVACY tests
 
-# Test Case 73: Remove oneself from attending an Event that one attends
-# on endpoint leave() 
-# Should fail
-def test_case_73_leave(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:        
-            add_consent(caller, CORE, 'Person', 'attends')
-        except Exception:
-            assert False
-        # Test leave()
-        try:
-            from project import leave
-            leave(12)
-        except PrivacyException:
-            assert False
-        finally:
-            assert caller.id not in [person.id for person in Event.query.get(12).attendants]
-            db.session.rollback()
-
-# Test Case 94: Read an Event’s owner’s name field that one owns
-# on endpoint events() 
-# Should fail
-def test_case_94_events(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:        
-            add_consent(caller, CORE, 'Person', 'name')
-        except Exception:
-            assert False
-        # Test events()
-        try:
-            result = events()
-            assert result['admin_own_event_owner_names'] != RESTRICTED
-            assert result['admin_own_event_owner_names'] == 'ADMIN0'
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
 # Test Case 95: Read an Event’s owner’s name field that one manages
 # on endpoint events() 
 # Should fail
@@ -119,28 +77,6 @@ def test_case_96_events(client, app_with_data):
             result = events()
             assert result['attend_event_owner_names'] != RESTRICTED
             assert result['attend_event_owner_names'] == 'p1'
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 97: Read an Event’s owner’s name field that one requests
-# on endpoint events() 
-# Should fail
-def test_case_97_events(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner = Person.query.filter(Person.testid == 'p1').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:        
-            add_consent(owner, CORE, 'Person', 'name')
-        except Exception:
-            assert False
-        # Test events()
-        try:
-            result = events()
-            assert result['request_event_owner_names'] != RESTRICTED
-            assert result['request_event_owner_names'] == 'p1'
         except PrivacyException:
             assert False
         finally:

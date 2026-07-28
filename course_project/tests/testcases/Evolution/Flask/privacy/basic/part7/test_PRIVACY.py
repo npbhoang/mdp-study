@@ -54,86 +54,6 @@ def login_user(user, app_with_data):
     login_user(user)
     identity_changed.send(app_with_data, identity=Identity(current_user.id))
 
-# Test Case 260: Read a Category’s moderators’s name as the non-moderator of the category
-# on endpoint edit_category() 
-# Should pass
-def test_case_260_edit_category(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'MODERATOR0').one()
-    owner = Person.query.filter(Person.testid == 'MODERATOR1').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner,CorePurpose,"Person","name")
-        except Exception:
-            assert False
-        # Test edit_category()
-        try:
-            from project import edit_category
-            result = edit_category(14) 
-            assert result is not None
-            testing_category = result['category']
-            assert testing_category is not None
-            assert testing_category.moderators is not RESTRICTED
-            assert len(testing_category.moderators) == 1
-            assert set([moderator.name for moderator in testing_category.moderators]) == set(['MODERATOR1'])
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 262: Read a Category’s moderators’s surname as the non-moderator of the category
-# on endpoint edit_category() 
-# Should pass
-def test_case_262_edit_category(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'MODERATOR0').one()
-    owner = Person.query.filter(Person.testid == 'MODERATOR1').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner,CorePurpose,"Person","surname")
-        except Exception:
-            assert False
-        # Test edit_category()
-        try:
-            from project import edit_category
-            result = edit_category(14) 
-            assert result is not None
-            testing_category = result['category']
-            assert testing_category is not None
-            assert testing_category.moderators is not RESTRICTED
-            assert len(testing_category.moderators) == 1
-            assert set([moderator.surname for moderator in testing_category.moderators]) == set(['MODERATOR1'])
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 275: Analyze an event as an owner
-# on endpoint analyze() 
-# Should pass
-def test_case_275_analyze(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner = Person.query.filter(Person.testid == 'p2').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(caller,AnalyticsPurpose,"Person","gender")
-            grant_consent(owner,AnalyticsPurpose,"Person","gender")
-        except Exception:
-            assert False
-        # Test analyze()
-        try:
-            from project import analyze
-            result = analyze(8)  
-            assert result['male'] is not RESTRICTED
-            assert result['male'] == 1
-            assert result['female'] is not RESTRICTED 
-            assert result['female'] == 1
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
 # Test Case 276: Analyze an event as a manager
 # on endpoint analyze() 
 # Should pass
@@ -157,38 +77,6 @@ def test_case_276_analyze(client, app_with_data):
         try:
             from project import analyze
             result = analyze(9)  
-            assert result['male'] is not RESTRICTED
-            assert result['male'] == 4
-            assert result['female'] is not RESTRICTED 
-            assert result['female'] == 1
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 277: Analyze an event as an attendant
-# on endpoint analyze() 
-# Should pass
-def test_case_277_analyze(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner1 = Person.query.filter(Person.testid == 'MODERATOR0').one()
-    owner2 = Person.query.filter(Person.testid == 'FREEUSER0').one()
-    owner3 = Person.query.filter(Person.testid == 'p0').one()
-    owner4 = Person.query.filter(Person.testid == 'p2').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(caller,AnalyticsPurpose,"Person","gender")
-            grant_consent(owner1,AnalyticsPurpose,"Person","gender")
-            grant_consent(owner2,AnalyticsPurpose,"Person","gender")
-            grant_consent(owner3,AnalyticsPurpose,"Person","gender")
-            grant_consent(owner4,AnalyticsPurpose,"Person","gender")
-        except Exception:
-            assert False
-        # Test analyze()
-        try:
-            from project import analyze
-            result = analyze(10)  
             assert result['male'] is not RESTRICTED
             assert result['male'] == 4
             assert result['female'] is not RESTRICTED 
@@ -225,85 +113,6 @@ def test_case_278_analyze(client, app_with_data):
         finally:
             db.session.rollback()
 
-# Test Case 279: Analyze an event as someone else
-# on endpoint analyze() 
-# Should pass
-def test_case_279_analyze(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    owner1 = Person.query.filter(Person.testid == 'p0').one()
-    owner2 = Person.query.filter(Person.testid == 'p2').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner1,AnalyticsPurpose,"Person","gender")
-            grant_consent(owner2,AnalyticsPurpose,"Person","gender")
-        except Exception:
-            assert False
-        # Test analyze()
-        try:
-            from project import analyze
-            result = analyze(12)  
-            assert result['male'] is not RESTRICTED
-            assert result['male'] == 1
-            assert result['female'] is not RESTRICTED 
-            assert result['female'] == 1
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 259: Read a Category’s moderators’s name as the moderator of the category
-# on endpoint edit_category() 
-# Should pass
-def test_case_259_edit_category(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'MODERATOR0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(caller,CorePurpose,"Person","name")
-        except Exception:
-            assert False
-        # Test edit_category()
-        try:
-            from project import edit_category
-            result = edit_category(13)
-            assert result is not None
-            testing_category = result['category']
-            assert testing_category is not None
-            assert testing_category.moderators is not RESTRICTED
-            assert len(testing_category.moderators) == 1
-            assert set([moderator.name for moderator in testing_category.moderators]) == set(['MODERATOR0'])
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
-# Test Case 261: Read a Category’s moderators’s surname as the moderator of the category
-# on endpoint edit_category() 
-# Should pass
-def test_case_261_edit_category(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'MODERATOR0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(caller,CorePurpose,"Person","surname")
-        except Exception:
-            assert False
-        # Test edit_category()
-        try:
-            from project import edit_category
-            result = edit_category(13)
-            assert result is not None
-            testing_category = result['category']
-            assert testing_category is not None
-            assert testing_category.moderators is not RESTRICTED
-            assert len(testing_category.moderators) == 1
-            assert set([moderator.surname for moderator in testing_category.moderators]) == set(['MODERATOR0'])
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()
-
 # Test Case 265: Read a Category’s candidates’s name as the moderator of the category
 # on endpoint edit_category() 
 # Should pass
@@ -331,23 +140,3 @@ def test_case_265_edit_category(client, app_with_data):
         finally:
             db.session.rollback()
 
-# Test Case 273: Send mass ads as a moderator of the category
-# on endpoint send_mass_advertisement() 
-# Should pass
-def test_case_273_send_mass_advertisement(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'MODERATOR0').one()
-    owner = Person.query.filter(Person.testid == 'p0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        try:
-            grant_consent(owner,MassMarketingPurpose,"Person","email")
-        except Exception:
-            assert False
-        # Test send_mass_advertisement()
-        try:
-            from project import send_mass_advertisement
-            send_mass_advertisement(13)  
-        except PrivacyException:
-            assert False
-        finally:
-            db.session.rollback()

@@ -30,126 +30,6 @@ def login_user(user, app_with_data):
     login_user(user)
     identity_changed.send(app_with_data, identity=Identity(current_user.id))
 
-# Test Case 43: Initialize one’s own name from None to something
-# on endpoint update_user()
-# Should fail
-def test_case_43_update_user(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        request.form = MultiDict({
-            "id": caller.id,
-            "name": "UpdatedName",
-            "surname": caller.surname,
-            "role": caller.role.name,
-            "email": caller.email,
-            "gender": caller.gender
-        })
-        try:
-            from project import update_user
-            update_user()
-        except PrivacyException:
-            assert True
-        finally:
-            assert Person.query.get(caller.id).name is None
-            db.session.rollback()
-
-# Test Case 44: Edit one’s own name from something to something else
-# on endpoint update_user()
-# Should fail
-def test_case_44_update_user(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN44').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        request.form = MultiDict({
-            "id": caller.id,
-            "name": "NewName",
-            "surname": caller.surname,
-            "role": caller.role.name,
-            "email": caller.email,
-            "gender": caller.gender
-        })
-        try:
-            from project import update_user
-            update_user()
-        except PrivacyException:
-            assert True
-        finally:
-            assert Person.query.get(caller.id).name == "ADMIN44"
-            db.session.rollback()
-
-# Test Case 45: Initialize one’s own surname from None to something
-# on endpoint update_user()
-# Should fail
-def test_case_45_update_user(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        request.form = MultiDict({
-            "id": caller.id,
-            "name": caller.name,
-            "surname": "UpdatedSurname",
-            "role": caller.role.name,
-            "email": caller.email,
-            "gender": caller.gender
-        })
-        try:
-            from project import update_user
-            update_user()
-        except PrivacyException:
-            assert True
-        finally:
-            assert Person.query.get(caller.id).surname is None
-            db.session.rollback()
-
-# Test Case 46: Edit one’s own surname from something to something else
-# on endpoint update_user()
-# Should fail
-def test_case_46_update_user(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN46').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        request.form = MultiDict({
-            "id": caller.id,
-            "name": caller.name,
-            "surname": "NewSurname",
-            "role": caller.role.name,
-            "email": caller.email,
-            "gender": caller.gender
-        })
-        try:
-            from project import update_user
-            update_user()
-        except PrivacyException:
-            assert True
-        finally:
-            assert Person.query.get(caller.id).surname == "ADMIN46"
-            db.session.rollback()
-
-# Test Case 55: Edit one’s own role from Admin to Regularuser
-# on endpoint update_user()
-# Should fail
-def test_case_55_update_user(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN55').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        request.form = MultiDict({
-            "id": caller.id,
-            "name": caller.name,
-            "surname": caller.surname,
-            "role": "REGULARUSER",
-            "email": caller.email,
-            "gender": caller.gender
-        })
-        try:
-            from project import update_user
-            update_user()
-        except PrivacyException:
-            assert True
-        finally:
-            assert Person.query.get(caller.id).role.name == "ADMIN"
-            db.session.rollback()
-
 # Test Case 56: Edit one’s own role from Admin to Moderator
 # on endpoint update_user()
 # Should fail
@@ -172,31 +52,6 @@ def test_case_56_update_user(client, app_with_data):
             assert True
         finally:
             assert Person.query.get(caller.id).role.name == "ADMIN"
-            db.session.rollback()
-
-# Test Case 57: Edit other Person’s role from Regularuser to Moderator
-# on endpoint update_user()
-# Should fail
-def test_case_57_update_user(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    target = Person.query.filter(Person.testid == 'FREEUSER57').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        request.form = MultiDict({
-            "id": target.id,
-            "name": target.name,
-            "surname": target.surname,
-            "role": "MODERATOR",
-            "email": target.email,
-            "gender": target.gender
-        })
-        try:
-            from project import update_user
-            update_user()
-        except PrivacyException:
-            assert True
-        finally:
-            assert Person.query.get(target.id).role.name == "REGULARUSER"
             db.session.rollback()
 
 # Test Case 58: Edit other Person’s role from Regularuser to Admin
@@ -224,56 +79,6 @@ def test_case_58_update_user(client, app_with_data):
             assert Person.query.get(target.id).role.name == "REGULARUSER"
             db.session.rollback()
 
-# Test Case 59: Edit other Person’s role from Moderator to Regularuser
-# on endpoint update_user()
-# Should fail
-def test_case_59_update_user(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    target = Person.query.filter(Person.testid == 'MODERATOR59').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        request.form = MultiDict({
-            "id": target.id,
-            "name": target.name,
-            "surname": target.surname,
-            "role": "REGULARUSER",
-            "email": target.email,
-            "gender": target.gender
-        })
-        try:
-            from project import update_user
-            update_user()
-        except PrivacyException:
-            assert True
-        finally:
-            assert Person.query.get(target.id).role.name == "MODERATOR"
-            db.session.rollback()
-
-# Test Case 60: Edit other Person’s role from Moderator to Admin
-# on endpoint update_user()
-# Should fail
-def test_case_60_update_user(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    target = Person.query.filter(Person.testid == 'MODERATOR60').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        request.form = MultiDict({
-            "id": target.id,
-            "name": target.name,
-            "surname": target.surname,
-            "role": "ADMIN",
-            "email": target.email,
-            "gender": target.gender
-        })
-        try:
-            from project import update_user
-            update_user()
-        except PrivacyException:
-            assert True
-        finally:
-            assert Person.query.get(target.id).role.name == "MODERATOR"
-            db.session.rollback()
-
 # Test Case 61: Edit other Person’s role from Admin to Regularuser
 # on endpoint update_user()
 # Should fail
@@ -299,27 +104,3 @@ def test_case_61_update_user(client, app_with_data):
             assert Person.query.get(target.id).role.name == "ADMIN"
             db.session.rollback()
 
-# Test Case 62: Edit other Person’s role from Admin to Moderator
-# on endpoint update_user()
-# Should fail
-def test_case_62_update_user(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    target = Person.query.filter(Person.testid == 'ADMIN62').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        request.form = MultiDict({
-            "id": target.id,
-            "name": target.name,
-            "surname": target.surname,
-            "role": "MODERATOR",
-            "email": target.email,
-            "gender": target.gender
-        })
-        try:
-            from project import update_user
-            update_user()
-        except PrivacyException:
-            assert True
-        finally:
-            assert Person.query.get(target.id).role.name == "ADMIN"
-            db.session.rollback()

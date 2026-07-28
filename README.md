@@ -6,13 +6,13 @@ Artifacts developers:
 - Hoang Nguyen (hoang.nguyen@inf.ethz.ch) 
 - Srdan Krstic (srdan.krstic@inf.ethz.ch)
 
-> **Evaluation.** This artifact is submitted for the **Artifacts Available** and **Artifacts Evaluated (Reusable)** badge.
+> **Evaluation.** Badges awarded: **Available**, **Evaluated (Functional)**, but **not Reproduced**.
 
 This artifact repository contains the materials used in the graduate-level security engineering course described in the paper. These materials include:
 - (i) Exercise and lab assignments designed to introduce students to the &nu;ActionGUI tool and the Python/Flask framework.
-- (ii) Project description and implementation templates for the Event Platform, covering both the &nu;ActionGUI and Python/Flask, together with the master solutions and evaluation test cases. The post-study questionnaire is also included.
+- (ii) Project description and implementation templates for the Event Platform, covering both the &nu;ActionGUI and Python/Flask, together with the master solutions and a representative subset of the evaluation test cases. The post-study questionnaire is also included.
 
-The provided materials support independent inspection and replication of the course setup and project tasks described in the paper. **Due to data protection restrictions, we cannot share the participant data collected during the study.**
+The provided materials support independent inspection and replication of the course setup and project tasks described in the paper. **Due to data protection restrictions, we cannot share the complete test set as well as the participant data collected during the study.**
 
 ## Repository Structure
 
@@ -99,7 +99,7 @@ course_project
 │   └── <a href="course_project/solutions/Evolution">Evolution</a>/
 │       ├── <a href="course_project/solutions/Evolution/Flask/project.py">Flask/project.py</a> — the Flask implementation solution
 │       └── <a href="course_project/solutions/Evolution/NuActionGUI/project.ptm">NuActionGUI/project.ptm</a> — the &nu;ActionGUI privacy model solution
-├── <a href="course_project/tests">tests</a>/ — privacy tests and testing environments
+├── <a href="course_project/tests">tests</a>/ — privacy tests (representative subset; see note below) and testing environments
 │   ├── <a href="course_project/tests/test_driver.py">test_driver.py</a> — evaluation driver
 │   ├── <a href="course_project/tests/docker">docker</a>/ — dockerized evaluation harness
 │   ├── <a href="course_project/tests/testcases">testcases</a>/ — collection of privacy testcases
@@ -168,6 +168,9 @@ The data/security/privacy models you complete live in `models/EventPlatformNAG/`
 Because the baseline templates implement only functional behavior and do not yet enforce security or privacy policies, requests that would normally be guarded by such enforcement may surface errors. For example, an unauthenticated user opening `/profile` returns HTTP 500 because the naive implementation reads the current user's data without first checking whether a user is logged in.
 
 ### Running the Tests
+
+> **Note: only a representative subset of the privacy tests is published here.** To preserve the integrity of the test suite for **future iterations of the course**, this artifact ships only a few test cases per subpart (three where available) rather than the complete grading suite used in the study; the full suite is withheld. The published tests are a strict subset of the originals, so the master solutions still pass every test included here.
+
 The privacy testcases under [`course_project/tests`](course_project/tests) are organized by phase (`Development`, `Evolution`) and tool (Flask, &nu;ActionGUI), and within each into three variants under `privacy/`, each split into `part1`, `part2`, … subparts. The three variants correspond to the privacy categories evaluated in the paper:
 
 - **`none`** — no consent is recorded, so every access to personal data must be denied.
@@ -175,8 +178,6 @@ The privacy testcases under [`course_project/tests`](course_project/tests) are o
 - **`complex`** — consent is granted for a complex purpose in the purpose hierarchy that subsumes the action's basic purpose, so the access is allowed.
 
 See the paper for the precise definitions of these categories.
-
-> **Note on subpart numbering.** The subparts run `part1`–`part8` with **no `part6`**. This is intentional and *not* a missing file. The numbering was done by the tool authors' and was used during the actual validation of the student submissions, and is preserved here as-is.
 
 > **Note on the evaluation driver.** The test driver ([`course_project/tests/test_driver.py`](course_project/tests/test_driver.py)) was written and tested with the assistance of Claude (Anthropic).
 
@@ -198,23 +199,6 @@ docker compose run --rm tests --phase evol --tech flask --solution
 Omitting `--solution` runs against the template instead of the master solution. 
 
 Add `--category <none|basic|complex>` or `--part <partN>` to narrow a run. 
-
-**Approximate execution time.** The privacy test suites can be run for both technologies and both phases. For &nu;ActionGUI, each run first regenerates the application from the models and then invokes `pytest`. For Flask, `pytest` runs directly against the implementation, since no code generation step is required. As a result, the Flask runs are substantially faster.
-
-On the reference machine (Windows 11), the privacy runs took approximately the following times:
-
-| `--tech` | `--phase` | `--solution` | Execution time |
-|------------|-------|:--------:|-----:|
-| `nag` | `dev` | ✗ | ~13 min |
-| `nag` | `dev` | ✓ | ~16 min |
-| `nag` | `evol` | ✗ | ~15 min |
-| `nag` | `evol` | ✓ | ~15 min |
-| `flask` | `dev` | ✗ | ~6 min |
-| `flask` | `dev` | ✓ | ~6 min |
-| `flask` | `evol` | ✗ | ~6 min |
-| `flask` | `evol` | ✓ | ~6 min |
-
-A complete sweep of the four &nu;ActionGUI privacy runs takes roughly one hour. The corresponding four Flask privacy runs take roughly 24 minutes. All times include the full per-run setup and may vary depending on hardware.
 
 ## License
 

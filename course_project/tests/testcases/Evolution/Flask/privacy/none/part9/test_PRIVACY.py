@@ -66,24 +66,6 @@ def test_case_18_personalized_stats(client, app_with_data):
         finally:
             db.session.rollback()
 
-# Test Case 20: Read own subscriptions, more than 2 attend events
-# on endpoint personalized_stats()
-# Should fail
-def test_case_20_personalized_stats(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN0').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test personalized_stats()
-        try:
-            from project import personalized_stats
-            result = personalized_stats(caller.id)
-            testing_user = result["user"]
-            assert testing_user.subscriptions == RESTRICTED or len(testing_user.subscriptions) == 0
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
 # Test Case 18b: Read own attended events, less or equal to 2 attend events
 # on endpoint personalized_stats()
 # Should fail
@@ -97,24 +79,6 @@ def test_case_18b_personalized_stats(client, app_with_data):
             result = personalized_stats(caller.id)
             testing_user = result["user"]
             assert testing_user.attends == RESTRICTED or len(testing_user.attends) == 0
-        except PrivacyException:
-            assert True
-        finally:
-            db.session.rollback()
-
-# Test Case 20b: Read own subscriptions, less or equal to 2 attend events
-# on endpoint personalized_stats()
-# Should fail
-def test_case_20b_personalized_stats(client, app_with_data):
-    caller = Person.query.filter(Person.testid == 'ADMIN1').one()
-    with app_with_data.test_request_context():
-        login_user(caller)
-        # Test personalized_stats()
-        try:
-            from project import personalized_stats
-            result = personalized_stats(caller.id)
-            testing_user = result["user"]
-            assert testing_user.subscriptions == RESTRICTED or len(testing_user.subscriptions) == 0
         except PrivacyException:
             assert True
         finally:
