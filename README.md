@@ -1,22 +1,23 @@
 # Models Trump Code: An Empirical Analysis of GDPR Compliance
 
-***Authors: Hoang Nguyen, Srdan Krstic, and David Basin***
+***Submitted to the 2026 ACM SIGSAC Conference on Computer and Communications Security (CCS ’26), November 15–19, 2026, The Hague, Netherlands***
 
 Artifacts developers: 
 - Hoang Nguyen (hoang.nguyen@inf.ethz.ch) 
 - Srdan Krstic (srdan.krstic@inf.ethz.ch)
 
-> **Evaluation.** Badges awarded: **Available**, **Evaluated (Functional)**, but **not Reproduced**.
+**Badges.**  **Available** and **Evaluated (Functional)**
 
-This artifact repository contains the materials used in the graduate-level security engineering course described in the paper. These materials include:
-- (i) Exercise and lab assignments designed to introduce students to the &nu;ActionGUI tool and the Python/Flask framework.
-- (ii) Project description and implementation templates for the Event Platform, covering both the &nu;ActionGUI and Python/Flask, together with the master solutions and a representative subset of the evaluation test cases. The post-study questionnaire is also included.
+This artifact repository contains the extended version of the published paper and the materials used in the graduate-level security engineering course described in the paper. These materials include:
+- (i) The extended version of the paper.
+- (ii) Exercise and lab assignments designed to introduce students to the &nu;ActionGUI tool and the Python/Flask framework.
+- (iii) Project description and implementation templates for the Event Platform, covering both the &nu;ActionGUI and Python/Flask, together with the master solutions and a representative subset of the evaluation test cases. The post-study questionnaire is also included.
 
 The provided materials support independent inspection and replication of the course setup and project tasks described in the paper. **Due to data protection restrictions, we cannot share the complete test set as well as the participant data collected during the study.**
 
 ## Repository Structure
 
-The repository is organized into two top-level components: the six-week [`course_materials`](course_materials) training phase and the [`course_project`](course_project) Event Platform. Training and course projects are distributed as self-contained, dockerized applications with their own `README.md`.
+The repository is organized into three top-level components: the extended paper folder [`extended_paper`](extended_paper), the six-week [`course_materials`](course_materials) training phase and the [`course_project`](course_project) Event Platform. Training and course projects are distributed as self-contained, dockerized applications with their own `README.md`.
 
 ### Training materials (`course_materials`)
 
